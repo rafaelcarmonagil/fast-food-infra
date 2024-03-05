@@ -73,3 +73,29 @@ resource "aws_sqs_queue_policy" "notificacao_status-policy" {
 }
 POLICY
 }
+
+
+resource "aws_sqs_queue" "notificacao-pagamento-error" {
+  name = var.sqs_notificacao_pagamento_error
+  sqs_managed_sse_enabled = false
+}
+
+resource "aws_sqs_queue_policy" "sqs_notificacao_pagamento_error-policy" {
+  queue_url = aws_sqs_queue.notificacao-pagamento-error.id
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Id": "sqspolicy",
+  "Statement": [
+    {
+      "Sid": "First",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "sqs:*",
+      "Resource": "${aws_sqs_queue.notificacao-pagamento-error.arn}"
+    }
+  ]
+}
+POLICY
+}
